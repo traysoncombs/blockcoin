@@ -634,4 +634,3 @@ if __name__ == '__main__':
     Blocks = Blockchain(verb=verb, port=port)
     if args.start:
         server(Blocks, port, verb=True)
-    Client(Blocks).mine('5PVbhJ5EgMsffbEzNYLb7bJyT6eeyg3ikgKktJvQ22px6Nff8cjwz5LgY669WdqR7b946nibNZjN6pUTZ6CuZch6')
