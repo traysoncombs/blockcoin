@@ -1,0 +1,246 @@
+#:import Clipboard kivy.core.clipboard.Clipboard
+#:import Window kivy.core.window
+#:kivy 1.10.1
+<Node>:
+    do_default_tab: False
+    TabbedPanelItem:
+        text: 'Blockchain'
+        ScrollView:
+            scroll_distance: 100
+            size: root.size
+            GridLayout:
+                cols: 1
+                spacing: 10
+                size_hint: (1.0, None)
+                height: self.minimum_height
+                id: chain
+                Button:
+                    id: load
+                    opacity: 0
+                    text: 'Load More Blocks'
+                    size_hint_y: None
+                    height: dp(45)
+
+    TabbedPanelItem:
+        text: 'Mine'
+        GridLayout:
+            id: mine_parent
+            rows: 2
+            padding: 0, 10
+            ScrollView:
+                # pos_hint_y: {'y': 1}
+                size_hint: 1.0, 0.7
+                Label:
+                    id: mine_text
+                    size_hint: None, None
+                    size: self.texture_size
+                    text: ''
+
+            BoxLayout:
+                id: mine
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+                size_hint_y: None
+                height: dp(45)
+                padding: root.size[0]/16, 0
+                TextInput:
+                    id: address
+                    multiline: False
+                    focus: True
+                    size_hint_x: 0.8
+                    hint_text: 'address'
+                    text: ''
+                Button:
+                    id: start_mining
+                    size_hint_x: 0.2
+                    text: 'Start!'
+                    on_release: root.mine(address.text)
+
+    TabbedPanelItem:
+        text: 'Transaction'
+        GridLayout:
+            cols: 1
+            rows: 5
+            padding: 10, root.size[1] / 3
+            spacing: 20
+            BoxLayout:
+                size_hint: 0.8, None
+                height: dp(45)
+                TextInput:
+                    id: private
+                    multiline: False
+                    size_hint: 0.7, 1.0
+                    hint_text: 'Private Key'
+                Button:
+                    id: check_value
+                    size_hint: 0.2, 1.0
+                    text: 'Check Value'
+                    on_release: val.text = root.check_value_private(private.text)
+                Label:
+                    id: val
+                    size_hint: 0.1, 1.0
+                    text: ''
+            TextInput:
+                id: recipient
+                multiline: False
+                size_hint: 0.8, None
+                height: dp(45)
+                hint_text: 'recipient'
+            TextInput:
+                id: amount
+                hint_text: 'amount'
+                multiline: False
+                size_hint: 0.8, None
+                height: dp(45)
+            Button:
+                size_hint: 0.8, None
+                height: dp(45)
+                text: 'Submit'
+                on_release: feedback.text = 'succeeded' if root.transaction(private.text, int(amount.text), recipient.text) else 'failed'
+            Label:
+                id: feedback
+                size_hint: 0.8, None
+                height: dp(45)
+                text: ''
+
+
+
+
+
+
+    TabbedPanelItem:
+        text: 'Generate Keys'
+        GridLayout:
+            rows: 2
+            AnchorLayout:
+                padding: 50, 50
+                anchor_x: 'center'
+                Label:
+                    id: key
+                    halign: 'center'
+                    size_hint: 1.0, None
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    text: ''
+            AnchorLayout:
+                id: g_buttons
+                anchor_y: 'bottom'
+                padding: root.size[0]/8, 10
+                Button:
+                    id: gen
+                    size_hint: 0.5, None
+                    height: dp(45)
+                    text: 'generate'
+                    on_release: root.gen()
+    TabbedPanelItem:
+        text: 'logging'
+        ScrollView:
+            Label:
+                id: output
+                size: self.texture_size
+                text: ''
+
+<Save>:
+    id: save
+    size_hint: 0.5, None
+    height: dp(45)
+    text: 'save'
+    on_press: root.popup()
+
+<Pop>:
+    auto_dismiss: False
+    size_hint: 0.75, 0.75
+    title: 'Save keys'
+    RelativeLayout:
+        size: root.size[0], root.size[1]
+        AnchorLayout:
+            size: root.size[0] , root.size[1]
+            anchor_x: 'right'
+            anchor_y: 'top'
+            Button:
+                size_hint: None, None
+                size: 40, 40
+                text: 'x'
+                on_release: root.dismiss()
+        AnchorLayout:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            padding: root.size[0]/4, 0
+            anchor_x: 'center'
+            Label:
+                size_hint: 1.0, None
+                text_size: self.width, None
+                height: self.texture_size[1]
+                text: 'Enter a password to encrypt your keys, make sure it is strong, you will need this password to access your keys later on.'
+        BoxLayout:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+            size_hint_y: None
+            height: dp(45)
+            padding: root.size[0]/16, 0
+            TextInput:
+                id: pw
+                focus: True
+                size_hint_x: 0.8
+                hint_text: 'password'
+            Button:
+                size_hint_x: 0.2
+                text: 'Save'
+                on_press: root.save(pw.text)
+                on_release: root.dismiss()
+
+
+
+<kpop>:
+    auto_dismiss: False
+    size_hint: 0.75, 0.75
+    title: 'Get keys'
+    RelativeLayout:
+        size: root.size[0], root.size[1]
+        AnchorLayout:
+            size: root.size[0] , root.size[1]
+            anchor_x: 'right'
+            anchor_y: 'top'
+            Button:
+                size_hint: None, None
+                size: 40, 40
+                text: 'x'
+                on_release: root.dismiss()
+        AnchorLayout:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            padding: root.size[0]/4, 0
+            anchor_x: 'center'
+            Label:
+                id: pwLabel
+                size_hint: 1.0, None
+                text_size: self.width, None
+                height: self.texture_size[1]
+                text: 'Enter the password you used to save your keys'
+        BoxLayout:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+            size_hint_y: None
+            height: dp(45)
+            padding: root.size[0]/16, 0
+            TextInput:
+                id: pw2
+                focus: True
+                size_hint_x: 0.8
+                hint_text: 'password'
+            Button:
+                size_hint_x: 0.2
+                text: 'Save'
+                on_press: root.importKeys(pw2.text)
+
+
+<startPop>:
+    title: 'Port'
+    size_hint: 0.5, 0.5
+    BoxLayout:
+        size_hint: 1.0, None
+        height: dp(45)
+        TextInput:
+            id: port
+            focus: True
+            size_hint: 0.8, 1.0
+            hint_text: 'Port'
+        Button:
+            size_hint: 0.2, 1.0
+            text: 'Start'
+            on_release: root.start()
