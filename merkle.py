@@ -1,3 +1,4 @@
+# Credit to https://github.com/Tierion for this script, can be found at: https://github.com/Tierion/pymerkletools
 import hashlib
 import binascii
 
